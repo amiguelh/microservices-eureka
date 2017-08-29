@@ -6,10 +6,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Hide the access to the microservice inside this local service.
+ * Hides the access to the microservice inside this local service.
  * 
  * @author amiguel
  */
@@ -24,6 +25,9 @@ public class ClientGreetingService {
 
 	protected String serviceUrl;
 
+	public ClientGreetingService(){
+	}
+
 	public ClientGreetingService(String serviceUrl) {
 		this.serviceUrl = serviceUrl.startsWith("http") ? serviceUrl: "http://" + serviceUrl;
 	}
@@ -35,17 +39,11 @@ public class ClientGreetingService {
 	@PostConstruct
 	public void demoOnly() {
 		// Can't do this in the constructor because the RestTemplate injection happens afterwards.
-		logger.warning("The RestTemplate request factory is " + restTemplate.getRequestFactory());
+		logger.log (Level.WARNING, "The RestTemplate request factory is {0}", new Object[]{restTemplate.getRequestFactory()});
 	}
 
 	public Greeting greeting (String name) {
-
-		logger.info("greeting() invoked: for " + name);
-		
-		Greeting greeting =  restTemplate.getForObject(serviceUrl + "/greeting/{name}",Greeting.class, name);
-	
-		return greeting;
-		
+		return restTemplate.getForObject(serviceUrl + "/greeting/{name}", Greeting.class, name);
 	}
 	
 }

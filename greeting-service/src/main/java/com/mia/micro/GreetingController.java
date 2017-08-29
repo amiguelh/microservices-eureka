@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -26,7 +27,9 @@ public class GreetingController {
 	 */	
 	@RequestMapping("/greeting/{name}")
     public Greeting greeting(@PathVariable("name") String name) {
-        return new Greeting(String.format(template, name));		
+		String greeting = String.format(template, name);
+		logger.info (greeting);
+        return new Greeting(greeting);
     }
 
 }
